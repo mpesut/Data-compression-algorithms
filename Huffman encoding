@@ -1,0 +1,93 @@
+class Node(object):
+    
+    def __init__(self, prob, symbol, left = None, right = None):
+        
+        self.left = left
+        self.right = right
+        self.prob = prob
+        self.symbol = symbol
+        self.code = ''
+    
+codes = dict()
+def Calculate_Codes(node, val = ''):
+    
+    newVal = val + str(node.code)
+    
+    if(node.left):
+        Calculate_Codes(node.left, newVal)
+    if(node.right):
+        Calculate_Codes(node.right, newVal)
+    if(not node.left and not node.right):
+        print(f"{node.symbol} -> {newVal}")
+        codes[node.symbol] = newVal
+    return codes
+        
+def Calculate_Probability(data):
+    
+    symbols = dict()
+    for element in data:
+        if element in symbols:
+            symbols[element] += 1
+        else:
+            symbols[element] = 1
+    return symbols
+
+def Output_Encoded(data, coding):
+    encoding_output = []
+    for c in data:
+      #  print(coding[c], end = '')
+      encoding_output.append(coding[c])
+        
+    string = ''.join([str(item) for item in encoding_output])    
+    return string
+
+def Huffman_encoding(data):
+    symbols_and_prob = Calculate_Probability(data)
+    symbols = symbols_and_prob.keys()
+    #probability = symbols_and_prob.values()
+    
+    nodes = []
+    
+    for symbol in symbols:
+        nodes.append(Node(symbols_and_prob.get(symbol),symbol))
+        
+    while len(nodes) > 1:
+        
+        nodes = sorted(nodes, key = lambda x : x.prob)
+        
+        right = nodes[0]
+        left = nodes[1]
+        
+        left.code = 0
+        right.code = 1
+        
+        newNode = Node(left.prob+right.prob, left.symbol+right.symbol, left, right)
+        nodes.remove(left)
+        nodes.remove(right)
+        nodes.append(newNode)
+        
+    huffman_encoding = Calculate_Codes(nodes[0])
+    print("symbols with codes", huffman_encoding)
+    encoded_output = Output_Encoded(data,huffman_encoding)
+    return encoded_output, nodes[0]  
+    
+data = "TOBEORNOTTOBEORTOBEORNOT"
+data2 = [84,79,66,69,79,82,78,79,84,256,258,260,265,259,261,263]
+print(data)
+encoding1, tree1 = Huffman_encoding(data)
+encoding, tree = Huffman_encoding(data2)
+print("Encoded output", len(encoding1))
+print("Encoded output",len(encoding))
+
+f = open("LZW.txt", "r")
+data2 = f.read()
+encoding2, tree2 = Huffman_encoding(data2)
+f.close()
+f = open("GreenEggsAndHam.txt", "r")
+data3 = f.read()
+encoding3, tree3 = Huffman_encoding(data3)
+f.close()
+print("Hamlet: ", len(encoding2), "\t huffman duljina: ", len(encoding3))
+        
+        
+    
