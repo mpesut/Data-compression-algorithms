@@ -1,0 +1,64 @@
+import queue
+
+MAX_WINDOW_SIZE = 400
+
+LOOK_AHEAD_BUFFER_SIZE = 15
+
+def find_last(buffer,a, first):
+    index = -1
+    for i in range(first, len(buffer)):
+        if(buffer[i] == a):
+            return i
+    return index
+
+
+def LZ77(data):
+    codes = []
+    buffer = []
+    i = 0
+    while i < len(data):
+        p = find_last(buffer,data[i],0)
+        duljina = 1
+        pok = p
+        while p != -1:
+            l = 1
+            print("pok ",p,buffer)
+            for j in range(1,15):
+                if(i+j < len(data) and p+j < len(buffer) and buffer[p+j] == data[i+j]):
+                    l += 1
+                    print("mjesto je ", p, "citam ", data[i+j])
+                else:
+                    break     
+            
+            if(duljina <= l):
+                duljina = l
+                pok = p
+            p = find_last(buffer,data[i],p+1)
+        
+        l = duljina
+        p = pok
+        if(pok != -1):
+            if(i + l < len(data)):
+                codes.append([len(buffer) - p,l,data[i+l]])
+            else:
+                codes.append([len(buffer) - p,l,'<eof>'])
+            for k in range(l+1):
+                if(len(buffer) > 400):
+                    buffer.pop(0)
+                if( i + k < len(data)):
+                    buffer.append(data[i+k])
+            i = i + l + 1
+        else:
+            codes.append([0,0,data[i]])
+            if(len(buffer) > 400):
+                buffer.pop(0)
+            buffer.append(data[i])
+            i += 1
+            continue
+        
+    return codes
+            
+f = open("GreenEggsAndHam.txt", "r")
+data = f.read()
+codes = LZ77(data)
+print(codes)
