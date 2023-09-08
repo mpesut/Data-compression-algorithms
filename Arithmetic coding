@@ -1,0 +1,56 @@
+from decimal import getcontext
+from decimal import Decimal
+
+getcontext().prec = 4000
+
+def Calculate_Frequency(data):
+    symbols = dict()
+    for i in data:
+        if i in symbols:
+            symbols[i] += 1
+        else:
+            symbols[i] = 1
+    for i in symbols:
+        symbols[i] /= len(data)
+    print("gotovo")
+    return symbols
+
+lower_bound = dict()
+upper_bound = dict()
+def Split_Interval(lower, upper, symbols):
+    
+    dif = upper - lower
+    last = lower
+    for symbol in symbols:
+        lower_bound[symbol] = last
+        upper_bound[symbol] = last + Decimal(symbols[symbol])*dif
+        last = upper_bound[symbol]
+    return lower_bound, upper_bound
+
+def Arithmetic_encoding(data, prob_table):
+    
+    lower , upper = Decimal(0.0), Decimal(1.0)
+    low, up = Split_Interval(lower, upper, prob_table)
+    for element in data:
+        lower, upper = Decimal(low[element]), Decimal(up[element])
+        low, up = Split_Interval(low[element], up[element], prob_table)
+        
+    l = len(data)
+    
+    return Decimal((upper+lower)/2)
+
+data = "GGB"
+prob_table = {"R" : 0.4, "G" : 0.5, "B": 0.1}
+#result = Arithmetic_encoding(data, prob_table)
+
+f = open("GreenEggsAndHam.txt", "r")
+data3 = f.read()
+print(len(data3))
+prob = Calculate_Frequency(data3)
+result1 = Arithmetic_encoding(data3, prob)
+pom = int(result1 * 10**(len(str(result1))-2))
+print(result1,"\n", len(str(result1)),"  bin  ",pom.bit_length())
+print(pom)
+f.close()
+    
+
