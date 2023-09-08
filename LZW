@@ -1,0 +1,48 @@
+def initialize_table():
+    
+    table = dict()
+    for i in range(256):
+        table[chr(i)] = i
+        
+    return table
+
+def LZW_Encoding(data):
+    
+    codes = []
+    table = initialize_table()
+    
+    p = data[0]
+    c = ""
+    code = 256
+    for i in range(1,len(data)):
+        if i != len(data):
+            c += data[i]
+            
+        if (p+c) in table:
+            p = p + c
+        else:
+            print(p, "  ", table[p],"\t", p+c, "\t", code)
+            codes.append(table[p])
+            table[p+c] = code
+            code += 1
+            p = c
+            
+        c = ""
+        
+    print(p, "\t", table[p])
+    codes.append(table[p])
+    return codes
+
+
+data = "TOBEORNOTTOBEORTOBEORNOT"
+codes = LZW_Encoding(data)
+for i in codes:
+    print(i)
+    
+f = open("Hamlet.txt", "r")
+data2 = f.read()
+codes = LZW_Encoding(data2)
+f1 = open("LZW.txt", "w")
+for i in codes:
+    f1.write(str(i) + " ")
+f1.close()
