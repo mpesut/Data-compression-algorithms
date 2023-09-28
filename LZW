@@ -32,17 +32,3 @@ def LZW_Encoding(data):
     print(p, "\t", table[p])
     codes.append(table[p])
     return codes
-
-
-data = "TOBEORNOTTOBEORTOBEORNOT"
-codes = LZW_Encoding(data)
-for i in codes:
-    print(i)
-    
-f = open("Hamlet.txt", "r")
-data2 = f.read()
-codes = LZW_Encoding(data2)
-f1 = open("LZW.txt", "w")
-for i in codes:
-    f1.write(str(i) + " ")
-f1.close()
