@@ -35,7 +35,6 @@ def Calculate_Probability(data):
 def Output_Encoded(data, coding):
     encoding_output = []
     for c in data:
-      #  print(coding[c], end = '')
       encoding_output.append(coding[c])
         
     string = ''.join([str(item) for item in encoding_output])    
@@ -44,7 +43,6 @@ def Output_Encoded(data, coding):
 def Huffman_encoding(data):
     symbols_and_prob = Calculate_Probability(data)
     symbols = symbols_and_prob.keys()
-    #probability = symbols_and_prob.values()
     
     nodes = []
     
@@ -69,25 +67,6 @@ def Huffman_encoding(data):
     huffman_encoding = Calculate_Codes(nodes[0])
     print("symbols with codes", huffman_encoding)
     encoded_output = Output_Encoded(data,huffman_encoding)
-    return encoded_output, nodes[0]  
-    
-data = "TOBEORNOTTOBEORTOBEORNOT"
-data2 = [84,79,66,69,79,82,78,79,84,256,258,260,265,259,261,263]
-print(data)
-encoding1, tree1 = Huffman_encoding(data)
-encoding, tree = Huffman_encoding(data2)
-print("Encoded output", len(encoding1))
-print("Encoded output",len(encoding))
-
-f = open("LZW.txt", "r")
-data2 = f.read()
-encoding2, tree2 = Huffman_encoding(data2)
-f.close()
-f = open("GreenEggsAndHam.txt", "r")
-data3 = f.read()
-encoding3, tree3 = Huffman_encoding(data3)
-f.close()
-print("Hamlet: ", len(encoding2), "\t huffman duljina: ", len(encoding3))
-        
+    return encoded_output, nodes[0]
         
     
