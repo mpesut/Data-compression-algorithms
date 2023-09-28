@@ -1,6 +1,6 @@
 from decimal import getcontext
 from decimal import Decimal
-
+import time
 getcontext().prec = 4000
 
 def Calculate_Frequency(data):
@@ -10,10 +10,11 @@ def Calculate_Frequency(data):
             symbols[i] += 1
         else:
             symbols[i] = 1
+    frq = symbols
     for i in symbols:
         symbols[i] /= len(data)
     print("gotovo")
-    return symbols
+    return symbols, frq
 
 lower_bound = dict()
 upper_bound = dict()
@@ -38,19 +39,3 @@ def Arithmetic_encoding(data, prob_table):
     l = len(data)
     
     return Decimal((upper+lower)/2)
-
-data = "GGB"
-prob_table = {"R" : 0.4, "G" : 0.5, "B": 0.1}
-#result = Arithmetic_encoding(data, prob_table)
-
-f = open("GreenEggsAndHam.txt", "r")
-data3 = f.read()
-print(len(data3))
-prob = Calculate_Frequency(data3)
-result1 = Arithmetic_encoding(data3, prob)
-pom = int(result1 * 10**(len(str(result1))-2))
-print(result1,"\n", len(str(result1)),"  bin  ",pom.bit_length())
-print(pom)
-f.close()
-    
-
